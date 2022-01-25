@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 
 @Injectable()
 export class AuthService {
+  public jwtToken: string;
   constructor(
     private readonly env: EnvService,
     private router: Router,
@@ -45,6 +46,7 @@ export class AuthService {
           this.router.navigate(['/signin'])
         } else {
           if (session.isValid()) {
+            this.jwtToken = session.getIdToken().getJwtToken();
             const credentialLogins = {};
             credentialLogins[`cognito-idp.${this.env.Region}.amazonaws.com/${this.env.UserPoolId}`] = session
               .getIdToken()

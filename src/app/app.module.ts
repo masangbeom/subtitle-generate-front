@@ -5,7 +5,7 @@ import {en_US, NZ_I18N} from 'ng-zorro-antd/i18n';
 import {registerLocaleData} from '@angular/common';
 import en from '@angular/common/locales/en';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from "@angular/router";
 import {MainComponent} from './main/main.component';
@@ -37,6 +37,8 @@ import {AppService} from "./app.service";
 import {EnvServiceProvider} from "./env.service.provider";
 import {NzSelectModule} from "ng-zorro-antd/select";
 import { VideoPlayerComponent } from './video-player/video-player.component';
+import {JwtInterceptor} from "./auth/jwt-interceptor.service";
+import {HttpInterceptorService} from "./http.interceptor";
 
 registerLocaleData(en);
 const routes: Routes = [
@@ -115,6 +117,12 @@ const routes: Routes = [
     AuthService,
     AppService,
     EnvServiceProvider,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true
+    },
+    {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
   ],
   bootstrap: [AppComponent]
 })

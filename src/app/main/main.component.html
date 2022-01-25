@@ -119,9 +119,13 @@
       </form>
       <div class="video-file-upload" *ngIf="current === 1">
         <div nz-row nzJustify="center">
+          <div class="upload-description">
+            Please upload a file smaller than 2GB.
+          </div>
           <ng-container>
             <nz-upload
               [nzCustomRequest]="customUploadReq"
+              nzSize="2042000"
               [nzLimit]="1"
               [nzAccept]="'video/*'"
               [nzHeaders]="{ Accept: 'application/json', 'Content-Type': 'multipart/form-data' }"

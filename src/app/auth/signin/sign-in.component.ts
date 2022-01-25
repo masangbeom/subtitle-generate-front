@@ -51,6 +51,7 @@ export class SignInComponent implements OnInit {
       const cognitoUser = this.authService.getCognitoUser(email);
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess:  (result) => {
+          this.authService.jwtToken = result.getIdToken().getJwtToken();
           const credentialLogins = {};
           credentialLogins[`cognito-idp.${this.env.Region}.amazonaws.com/${this.env.UserPoolId}`] = result
             .getIdToken()

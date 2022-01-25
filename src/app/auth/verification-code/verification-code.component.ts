@@ -5,6 +5,7 @@ import {AuthService} from "../auth.service";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NgxSpinnerService} from "ngx-spinner";
 import {EnvService} from "../../env.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-verfication-code',
@@ -12,7 +13,9 @@ import {EnvService} from "../../env.service";
   styleUrls: ['./verification-code.component.scss']
 })
 export class VerificationCodeComponent implements OnInit {
+  appName = environment.appName;
   validateForm!: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,

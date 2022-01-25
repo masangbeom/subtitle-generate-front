@@ -41,9 +41,9 @@ export class VideoPlayerComponent implements OnInit, AfterViewInit {
         label: subTitleLanguageList[index].text
       }
     });
-    this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {
-      console.log('onPlayerReady', this);
-    });
+    // this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {
+    // });
+    this.player = videojs(this.target.nativeElement, this.options);
     this.player.mobileUi();
   }
 

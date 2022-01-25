@@ -53,8 +53,10 @@ export class MainComponent implements OnInit {
     private readonly spinner: NgxSpinnerService,
     private modal: NzModalService,
   ) {
-    console.log(this.env.AssetsDistributionUrl);
     if (this.env.AssetsDistributionUrl && this.env.ApiUrl) {
+      if (!this.authService.user) {
+        this.router.navigate(['/signin']);
+      }
       this.spinner.show();
       this.appService.readVideoDtos().then(() => {
         this.appService.videosBehavior.subscribe(videos => {
@@ -104,10 +106,8 @@ export class MainComponent implements OnInit {
     }
   }
 
+
   ngOnInit(): void {
-    if (this.env.AssetsDistributionUrl && this.env.ApiUrl) {
-      this.authService.setCredentials();
-    }
     this.validateForm = this.fb.group({
       title: [null, [Validators.required]],
       description: [null],
