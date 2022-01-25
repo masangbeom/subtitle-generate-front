@@ -1,0 +1,29 @@
+<div class="signin-wrapper">
+  <div class="banner" nz-row nzJustify="center">
+    <h1 class="banner-title"><a routerLink="/">{{appName}}</a><br>Sign In</h1>
+    <div nz-col nzSpan="24"></div>
+    <span class="banner-description">
+    @Created By AWS Solutions Architect - Sangbeom, Ma
+  </span>
+  </div>
+  <div class="signin-form" nz-row nzJustify="center">
+    <form nz-form [formGroup]="validateForm" class="signin-form" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="The input is not valid E-mail!">
+          <nz-input-group>
+            <input nz-input formControlName="email" placeholder="Email"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your password!">
+          <nz-input-group>
+            <input type="password" nz-input formControlName="password" placeholder="Password"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">Log in</button>
+      <a routerLink="/signup"> Sign Up</a>
+    </form>
+  </div>
+</div>

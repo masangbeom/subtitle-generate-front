@@ -1,0 +1,90 @@
+@import "../../styles";
+.profile-wrapper {
+  padding: 16px;
+}
+
+.banner {
+  nz-row {
+    width: 100%;
+  }
+  width: 100%;
+  padding: 32px;
+  .banner-title {
+    font-size: 4rem;
+    font-weight: bold;
+    color: $main-color;
+  }
+  .banner-description {
+    color: gray;
+  }
+}
+
+.search-bar-wrapper {
+  padding: 32px 0 32px 0;
+  background: $main-color;
+  nz-input-group {
+    width: 40%;
+  }
+}
+
+.videos-wrapper {
+  min-height: 70vh;
+  margin: 0 !important;
+  width: 100%;
+  background: $main-color;
+  padding: 16px;
+}
+
+
+.video-upload-button {
+  margin-left: 16px;
+}
+
+.upload-video-form-wrapper {
+  padding: 16px;
+}
+
+.video-form {
+  margin-top: 16px;
+}
+
+.video-file-upload {
+  margin: 32px 0 32px 0;
+}
+
+.generate-description {
+  color: gray;
+}
+
+nz-select {
+  margin-top: 16px;
+  width: 100%;
+}
+
+nz-card {
+  cursor: default;
+}
+
+.generate-btn {
+  margin-left: 16px;
+}
+
+.subtitle-list-wrapper {
+  margin-top: 16px;
+}
+.env-wrapper {
+  height: 100vh;
+  background: $main-color;
+  .env-input-wrapper {
+    width: 80%;
+    height: 50vh;
+    h2 {
+      font-weight: bold;
+      color: #ffffff;
+      margin-top: 16px;
+    }
+    button {
+      margin-top: 16px;
+    }
+  }
+}

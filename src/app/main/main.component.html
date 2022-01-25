@@ -1,0 +1,181 @@
+<ng-container *ngIf="env.ApiUrl" xmlns="http://www.w3.org/1999/html">
+  <div class="banner" nz-row nzJustify="center">
+    <nz-row nzJustify="space-between">
+      <button nz-button nzSize="large" nzDanger (click)="reSetEnv()">Environment Setting</button>
+      <button nz-button nzSize="large" nzDanger (click)="signOut()">Sign Out</button>
+    </nz-row>
+    <h1 class="banner-title">Subtitle Generator</h1>
+    <div nz-col nzSpan="24"></div>
+    <span class="banner-description">
+    @Created By AWS Solutions Architect - Sangbeom, Ma<br>
+                      © Amazon Web Services, Inc. or its affiliates. All rights reserved.
+  </span>
+  </div>
+  <div class="search-bar-wrapper" nz-row nzJustify="center">
+    <nz-input-group [nzSuffix]="suffixIconSearch" nzSize="large">
+      <input type="text" nz-input placeholder="Search Video" [(ngModel)]="searchVideo.title"/>
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <i nz-icon nzType="search"></i>
+    </ng-template>
+    <button nz-button class="video-upload-button" nzSize="large" [disabled]="isGenerating"
+            (click)="showVideoUploadModal()"><i nz-icon nzType="upload"></i>Upload Video
+    </button>
+  </div>
+  <div class="videos-wrapper" nz-row [nzGutter]="[24, 24]">
+    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="8" *ngFor="let video of videos | filterBy: searchVideo">
+      <nz-card [nzActions]="[createSubtitle, deleteConfirm]" [nzBorderless]="true" nzHoverable>
+        <nz-card-meta [nzTitle]="titleTemp" [nzDescription]="video.description"></nz-card-meta>
+        <div class="subtitle-list-wrapper">
+          <nz-list nzBordered nzHeader="Subtitles">
+            <nz-list-item *ngFor="let item of video.languages">
+              <ul nz-list-item-actions *ngIf="item.srtURL && item.vttURL">
+                <nz-list-item-action>
+                  <a [href]="item.srtURL" target="_blank">.srt</a>
+                </nz-list-item-action>
+                <nz-list-item-action>
+                  <a [href]="item.vttURL" target="_blank">.vtt</a>
+                </nz-list-item-action>
+              </ul>
+              <ul nz-list-item-actions *ngIf="!item.srtURL && !item.vttURL">
+                <nz-list-item-action>
+                  <nz-spin nzSimple nzTip="Generating..."></nz-spin>
+                </nz-list-item-action>
+              </ul>
+              {{languageToText(item.language)}}
+            </nz-list-item>
+          </nz-list>
+        </div>
+        <ng-template #titleTemp>
+          <nz-row>
+            {{video.title}}
+          </nz-row>
+          <nz-row nzJustify="end">
+            <a [href]="video.sourceFileURL" target="_blank">
+              <button nz-button nzType="primary"><i nz-icon nzType="file"></i> Video file</button>
+            </a>
+          </nz-row>
+        </ng-template>
+      </nz-card>
+      <ng-template #createSubtitle>
+        <button nz-button nzType="primary" [nzSize]="'large'" [disabled]="video.isGenerating"
+                (click)="openGenerateSubtitleModal(video)"
+        >Generate
+        </button>
+      </ng-template>
+      <ng-template #deleteConfirm>
+        <button nz-button [nzSize]="'large'" (click)="showConfirm(video)" nzDanger
+        >Delete
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</ng-container>
+<nz-modal [(nzVisible)]="isVideoUploadModalVisible" nzTitle="Upload Video" [nzFooter]="uploadModalFooter"
+          nzWidth="480px" (nzOnCancel)="handleCancel()">
+  <ng-container *nzModalContent>
+    <div class="upload-video-form-wrapper">
+      <nz-steps [nzCurrent]="current">
+        <nz-step nzTitle="Video Info">
+        </nz-step>
+        <nz-step nzTitle="Upload Video File">
+        </nz-step>
+      </nz-steps>
+      <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" *ngIf="current === 0" class="video-form">
+        <h3>Title</h3>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input video title.">
+            <input nz-input placeholder="Video title" formControlName="title"/>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-divider></nz-divider>
+        <h3>Description</h3>
+        <nz-form-item>
+          <nz-form-control>
+            <textarea rows="4" nz-input formControlName="description"
+                      placeholder="Video description"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-divider></nz-divider>
+        <h3>Source Language</h3>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please select source language of video.">
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a source language"
+                       formControlName="sourceLanguageCode">
+              <nz-option *ngFor="let languageItem of transcriptLanguageList" [nzLabel]="languageItem.text"
+                         [nzValue]="languageItem.code"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-divider></nz-divider>
+        <div nz-row nzJustify="end" style="margin: 16px 0 16px 0">
+          <button nz-button nzType="primary">Next</button>
+        </div>
+      </form>
+      <div class="video-file-upload" *ngIf="current === 1">
+        <div nz-row nzJustify="center">
+          <ng-container>
+            <nz-upload
+              [nzCustomRequest]="customUploadReq"
+              [nzLimit]="1"
+              [nzAccept]="'video/*'"
+              [nzHeaders]="{ Accept: 'application/json', 'Content-Type': 'multipart/form-data' }"
+              nzShowUploadList="false"
+              nzMultiple="false">
+              <button [disabled]="isUploading" nz-button nzType="primary" nzSize="large"><i nz-icon
+                                                                                            nzType="upload"></i>Upload
+                Video File
+              </button>
+            </nz-upload>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #uploadModalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Close</button>
+  </ng-template>
+</nz-modal>
+<nz-modal [(nzVisible)]="isGenerateSubtitleModalVisible" nzTitle="Generate Subtitle"
+          [nzFooter]="generateSubtitleModalFooter"
+          nzWidth="480px" (nzOnCancel)="cancelGenerateSubtitle()">
+  <ng-container *nzModalContent>
+    <h3>Select Target Language</h3>
+    <span class="generate-description">When creating subtitles for the first time, subtitle for the source language are automatically created. Please select the subtitle language you want to translate.</span>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a source language"
+               [(ngModel)]="targetSourceLanguage">
+      <nz-option *ngFor="let languageItem of subTitleLanguageList" [nzLabel]="languageItem.text"
+                 [nzValue]="languageItem.language"></nz-option>
+    </nz-select>
+  </ng-container>
+  <ng-template #generateSubtitleModalFooter>
+    <button nz-button nzType="default" (click)="cancelGenerateSubtitle()">Close</button>
+
+    <button class="generate-btn" nz-button nzType="primary" (click)="createSubtitle()"
+            [disabled]="!targetSourceLanguage">Generate
+    </button>
+  </ng-template>
+</nz-modal>
+<ng-container *ngIf="!env.ApiUrl">
+  <nz-row class="env-wrapper" nzJustify="center" nzAlign="middle">
+    <div class="banner" nz-row nzJustify="center">
+      <h1 class="banner-title" style="color: white">Subtitle Generator</h1>
+      <div nz-col nzSpan="24"></div>
+      <span class="banner-description" style="color: #e8e8e8">
+    @Created By AWS Solutions Architect - Sangbeom, Ma<br>
+                © Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+  </span>
+    </div>
+    <div class="env-input-wrapper">
+      <h2>Paste whole text in cdk-outputs.json</h2>
+      <nz-input-group>
+        <textarea rows="10" nzSize="large" placeholder="Paste whole text in cdk-outputs.json"
+                  nz-input [(ngModel)]="envJson"></textarea>
+      </nz-input-group>
+      <nz-row nzJustify="end">
+        <button nz-button nzType="default" [nzSize]="'large'" (click)="setEnv()">Submit</button>
+      </nz-row>
+    </div>
+  </nz-row>
+</ng-container>

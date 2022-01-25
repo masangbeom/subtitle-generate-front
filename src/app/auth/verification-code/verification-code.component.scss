@@ -1,0 +1,34 @@
+.verification-wrapper {
+  height: 100vh;
+  background: #e8e8e8;
+  padding-top: 20vh;
+  .banner {
+    width: 100%;
+    padding: 16px;
+    .banner-title {
+      font-size: 54px;
+      font-weight: bold;
+    }
+    .banner-description {
+      color: gray;
+    }
+  }
+  .verification-form {
+    padding: 16px;
+    .verification-form {
+      min-width: 400px;
+    }
+
+    .verification-form-margin {
+      margin-bottom: 16px;
+    }
+
+    .verification-form-forgot {
+      float: right;
+    }
+
+    .verification-form-button {
+      width: 100%;
+    }
+  }
+}

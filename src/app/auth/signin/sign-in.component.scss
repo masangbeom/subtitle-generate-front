@@ -1,0 +1,34 @@
+.signin-wrapper {
+  height: 100vh;
+  background: #e8e8e8;
+  padding-top: 20vh;
+  .banner {
+    width: 100%;
+    padding: 16px;
+    .banner-title {
+      font-size: 54px;
+      font-weight: bold;
+    }
+    .banner-description {
+      color: gray;
+    }
+  }
+  .signin-form {
+    padding: 16px;
+    .signin-form {
+      min-width: 400px;
+    }
+
+    .login-form-margin {
+      margin-bottom: 16px;
+    }
+
+    .login-form-forgot {
+      float: right;
+    }
+
+    .login-form-button {
+      width: 100%;
+    }
+  }
+}

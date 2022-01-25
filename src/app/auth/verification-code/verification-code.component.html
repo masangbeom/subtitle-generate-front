@@ -1,0 +1,29 @@
+<div class="verification-wrapper">
+  <div class="banner" nz-row nzJustify="center">
+    <h1 class="banner-title"><a routerLink="/">Octank VOD</a><br>Verification</h1>
+    <div nz-col nzSpan="24"></div>
+    <span class="banner-description">
+    @Created By AWS Solutions Architect - Sangbeom, Ma
+  </span>
+  </div>
+  <div class="verification-form" nz-row nzJustify="center">
+    <form nz-form [formGroup]="validateForm" class="verification-form" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="The input is not valid E-mail!">
+          <nz-input-group>
+            <input nz-input formControlName="name" placeholder="Email"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your verification code!">
+          <nz-input-group>
+            <input type="text" nz-input formControlName="code" placeholder="Verification Code"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <button nz-button class="verification-form-button verification-form-margin" [nzType]="'primary'">Verification Code</button>
+      <a *ngIf="validateForm?.get('name')?.valid" (click)="resendVerification()"> Resend Verfication Code Email</a>
+    </form>
+  </div>
+</div>
