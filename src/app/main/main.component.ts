@@ -53,6 +53,7 @@ export class MainComponent implements OnInit {
     private readonly spinner: NgxSpinnerService,
     private modal: NzModalService,
   ) {
+    console.log(this.env.AssetsDistributionUrl);
     if (this.env.AssetsDistributionUrl && this.env.ApiUrl) {
       this.spinner.show();
       this.appService.readVideoDtos().then(() => {

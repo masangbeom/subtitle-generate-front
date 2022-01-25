@@ -36,6 +36,7 @@ import {NzListModule} from "ng-zorro-antd/list";
 import {AppService} from "./app.service";
 import {EnvServiceProvider} from "./env.service.provider";
 import {NzSelectModule} from "ng-zorro-antd/select";
+import { VideoPlayerComponent } from './video-player/video-player.component';
 
 registerLocaleData(en);
 const routes: Routes = [
@@ -73,9 +74,11 @@ const routes: Routes = [
     AppComponent,
     MainComponent,
 
+    VideoPlayerComponent,
     SignInComponent,
     SignUpComponent,
     VerificationCodeComponent,
+    VideoPlayerComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),

@@ -24,7 +24,7 @@
   </div>
   <div class="videos-wrapper" nz-row [nzGutter]="[24, 24]">
     <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="8" *ngFor="let video of videos | filterBy: searchVideo">
-      <nz-card [nzActions]="[createSubtitle, deleteConfirm]" [nzBorderless]="true" nzHoverable>
+      <nz-card [nzActions]="[createSubtitle, playVideo, deleteConfirm]" [nzBorderless]="true" nzHoverable>
         <nz-card-meta [nzTitle]="titleTemp" [nzDescription]="video.description"></nz-card-meta>
         <div class="subtitle-list-wrapper">
           <nz-list nzBordered nzHeader="Subtitles">
@@ -50,7 +50,7 @@
           <nz-row>
             {{video.title}}
           </nz-row>
-          <nz-row nzJustify="end">
+          <nz-row nzJustify="end" class="video-file-btn-wrapper">
             <a [href]="video.sourceFileURL" target="_blank">
               <button nz-button nzType="primary"><i nz-icon nzType="file"></i> Video file</button>
             </a>
@@ -66,6 +66,11 @@
       <ng-template #deleteConfirm>
         <button nz-button [nzSize]="'large'" (click)="showConfirm(video)" nzDanger
         >Delete
+        </button>
+      </ng-template>
+      <ng-template #playVideo>
+        <button nz-button [nzSize]="'large'" (click)="showPlayerModal(video)"
+        >Play Video
         </button>
       </ng-template>
     </div>
@@ -85,14 +90,14 @@
         <h3>Title</h3>
         <nz-form-item>
           <nz-form-control nzErrorTip="Please input video title.">
-            <input nz-input placeholder="Video title" formControlName="title"/>
+            <input nz-input placeholder="Video title" formControlName="title" maxlength="45"/>
           </nz-form-control>
         </nz-form-item>
         <nz-divider></nz-divider>
         <h3>Description</h3>
         <nz-form-item>
           <nz-form-control>
-            <textarea rows="4" nz-input formControlName="description"
+            <textarea rows="4" nz-input formControlName="description" maxlength="200"
                       placeholder="Video description"></textarea>
           </nz-form-control>
         </nz-form-item>
@@ -154,6 +159,18 @@
     <button class="generate-btn" nz-button nzType="primary" (click)="createSubtitle()"
             [disabled]="!targetSourceLanguage">Generate
     </button>
+  </ng-template>
+</nz-modal>
+<nz-modal [(nzVisible)]="isPlayerModalVisible" [nzTitle]="selectedVideo?.title" [nzFooter]="videoModalFooter"
+          nzWidth="80%" (nzOnCancel)="handleCancel()">
+  <ng-container *nzModalContent>
+    <video-player
+    [options]="{autoplay: true, fluid: true, sources: [{src: selectedVideo.sourceFileURL, type: 'video/mp4'}]
+    , tracks: selectedVideo.languages}"
+    ></video-player>
+  </ng-container>
+  <ng-template #videoModalFooter>
+    <button nz-button nzType="default" (click)="handleCancel()">Close</button>
   </ng-template>
 </nz-modal>
 <ng-container *ngIf="!env.ApiUrl">
