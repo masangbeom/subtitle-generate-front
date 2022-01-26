@@ -6,6 +6,7 @@ import {environment} from "../../../environments/environment";
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NgxSpinnerService} from "ngx-spinner";
 import {EnvService} from "../../env.service";
+import {CognitoUserAttribute} from "amazon-cognito-identity-js";
 
 @Component({
   selector: 'app-signup',
@@ -32,6 +33,7 @@ export class SignUpComponent implements OnInit {
       this.router.navigate(['/']);
     }
     this.validateForm = this.fb.group({
+      name: [null, [Validators.required]],
       email: [null, [Validators.email, Validators.required]],
       password: [null, [Validators.required]],
       checkPassword: [null, [Validators.required, this.confirmationValidator]],
@@ -47,8 +49,10 @@ export class SignUpComponent implements OnInit {
 
     if (this.validateForm.valid) {
       this.spinner.show();
-      const {email, password} = this.validateForm.getRawValue();
-      this.authService.userPool.signUp(email, password, [], [], (
+      const {name, email, password} = this.validateForm.getRawValue();
+      this.authService.userPool.signUp(name, password,
+        [new CognitoUserAttribute({ Name: 'email', Value: email })],
+        [], (
         err,
         result
       ) => {

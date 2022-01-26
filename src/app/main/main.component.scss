@@ -3,6 +3,11 @@
   padding: 16px;
 }
 
+.user-name-tag {
+  color: white;
+  background: $main-color;
+}
+
 .banner {
   nz-row {
     width: 100%;
@@ -28,7 +33,7 @@
 }
 
 .videos-wrapper {
-  min-height: 70vh;
+  min-height: 80vh;
   margin: 0 !important;
   width: 100%;
   background: $main-color;

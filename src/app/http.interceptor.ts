@@ -22,7 +22,7 @@ export class HttpInterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const request: HttpRequest<any> = req.clone();
     return next.handle(request).pipe(catchError(e => {
-      if (e.status === 401) {
+      if (e.status === 401 || e.status === 0) {
         this.authService.signOut();
         this.router.navigate(['/signin']);
       }

@@ -1,6 +1,7 @@
 export class ReadVideoDto {
   videoId: string;
   title: string;
+  userName: string;
   description: string;
   hasTranscript: boolean;
   sourceTranscriptURL: string;

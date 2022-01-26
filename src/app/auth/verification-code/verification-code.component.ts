@@ -33,7 +33,7 @@ export class VerificationCodeComponent implements OnInit {
       this.router.navigate(['/']);
     }
     this.validateForm = this.fb.group({
-      name: [this.route.snapshot.params.username, [Validators.email, Validators.required]],
+      name: [this.route.snapshot.params.username, [Validators.required]],
       code: [null, [Validators.required]],
     });
   }

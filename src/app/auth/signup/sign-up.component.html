@@ -9,6 +9,13 @@
   <div class="signup-form" nz-row nzJustify="center">
     <form nz-form [formGroup]="validateForm" class="signup-form" (ngSubmit)="submitForm()">
       <nz-form-item>
+        <nz-form-control nzErrorTip="Please input your ID!">
+          <nz-input-group>
+            <input type="text" nz-input formControlName="name" placeholder="ID"/>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
         <nz-form-control nzErrorTip="The input is not valid E-mail!">
           <nz-input-group>
             <input nz-input formControlName="email" placeholder="Email"/>

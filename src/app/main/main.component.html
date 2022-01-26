@@ -1,4 +1,4 @@
-<ng-container *ngIf="env.ApiUrl" xmlns="http://www.w3.org/1999/html">
+<ng-container *ngIf="env.ApiUrl">
   <div class="banner" nz-row nzJustify="center">
     <nz-row nzJustify="space-between">
       <button nz-button nzSize="large" nzDanger (click)="reSetEnv()">Environment Setting</button>
@@ -7,8 +7,7 @@
     <h1 class="banner-title">Subtitle Generator</h1>
     <div nz-col nzSpan="24"></div>
     <span class="banner-description">
-    @Created By AWS Solutions Architect - Sangbeom, Ma<br>
-                      © Amazon Web Services, Inc. or its affiliates. All rights reserved.
+      © Amazon Web Services, Inc. or its affiliates. All rights reserved.
   </span>
   </div>
   <div class="search-bar-wrapper" nz-row nzJustify="center">
@@ -22,10 +21,11 @@
             (click)="showVideoUploadModal()"><i nz-icon nzType="upload"></i>Upload Video
     </button>
   </div>
-  <div class="videos-wrapper" nz-row [nzGutter]="[24, 24]">
-    <div nz-col nzXs="24" nzSm="24" nzMd="12" nzLg="12" nzXl="8" *ngFor="let video of videos | filterBy: searchVideo">
+  <div class="videos-wrapper" nz-row [nzGutter]="[32, 32]">
+    <div nz-col nzXs="24" nzSm="24" nzMd="24" nzLg="12" nzXl="8"
+         *ngFor="let video of videos | filterBy: searchVideo">
       <nz-card [nzActions]="[createSubtitle, playVideo, deleteConfirm]" [nzBorderless]="true" nzHoverable>
-        <nz-card-meta [nzTitle]="titleTemp" [nzDescription]="video.description"></nz-card-meta>
+        <nz-card-meta [nzTitle]="titleTemp" [nzDescription]="descriptionTemp"></nz-card-meta>
         <div class="subtitle-list-wrapper">
           <nz-list nzBordered nzHeader="Subtitles">
             <nz-list-item *ngFor="let item of video.languages">
@@ -46,17 +46,25 @@
             </nz-list-item>
           </nz-list>
         </div>
-        <ng-template #titleTemp>
-          <nz-row>
-            {{video.title}}
-          </nz-row>
-          <nz-row nzJustify="end" class="video-file-btn-wrapper">
-            <a [href]="video.sourceFileURL" target="_blank">
-              <button nz-button nzType="primary"><i nz-icon nzType="file"></i> Video file</button>
-            </a>
-          </nz-row>
-        </ng-template>
       </nz-card>
+      <ng-template #titleTemp>
+        <nz-row>
+          {{video.title}}
+        </nz-row>
+        <nz-row nzJustify="end" class="video-file-btn-wrapper">
+          <a [href]="video.sourceFileURL" target="_blank">
+            <button nz-button nzType="primary"><i nz-icon nzType="file"></i> Video file</button>
+          </a>
+        </nz-row>
+      </ng-template>
+      <ng-template #descriptionTemp>
+        <nz-row>
+          {{video.description}}
+        </nz-row>
+        <nz-row nzJustify="end">
+          <nz-tag class="user-name-tag"><span>{{video.userName}}</span></nz-tag>
+        </nz-row>
+      </ng-template>
       <ng-template #createSubtitle>
         <button nz-button nzType="primary" [nzSize]="'large'" [disabled]="video.isGenerating"
                 (click)="openGenerateSubtitleModal(video)"
@@ -65,6 +73,7 @@
       </ng-template>
       <ng-template #deleteConfirm>
         <button nz-button [nzSize]="'large'" (click)="showConfirm(video)" nzDanger
+                [disabled]="currentUserName !== video.userName"
         >Delete
         </button>
       </ng-template>
@@ -166,10 +175,11 @@
   </ng-template>
 </nz-modal>
 <nz-modal [(nzVisible)]="isPlayerModalVisible" [nzTitle]="selectedVideo?.title" [nzFooter]="videoModalFooter"
+          [nzBodyStyle]="{padding: 0}"
           nzWidth="80%" (nzOnCancel)="handleCancel()">
   <ng-container *nzModalContent>
     <video-player
-    [options]="{autoplay: true, fluid: true, sources: [{src: selectedVideo.sourceFileURL, type: 'video/mp4'}]
+      [options]="{autoplay: true, fluid: true, sources: [{src: selectedVideo.sourceFileURL, type: 'video/mp4'}]
     , tracks: selectedVideo.languages}"
     ></video-player>
   </ng-container>
@@ -183,10 +193,8 @@
       <h1 class="banner-title" style="color: white">Subtitle Generator</h1>
       <div nz-col nzSpan="24"></div>
       <span class="banner-description" style="color: #e8e8e8">
-    @Created By AWS Solutions Architect - Sangbeom, Ma<br>
-                © Amazon Web Services, Inc. or its affiliates. All rights reserved.
-
-  </span>
+        © Amazon Web Services, Inc. or its affiliates. All rights reserved.
+      </span>
     </div>
     <div class="env-input-wrapper">
       <h2>Paste whole text in cdk-outputs.json</h2>

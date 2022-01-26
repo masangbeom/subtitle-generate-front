@@ -27,12 +27,13 @@ export class SignInComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.spinner.hide();
     if (this.env.AssetsDistributionUrl && this.env.ApiUrl) {
     } else {
       this.router.navigate(['/']);
     }
       this.validateForm = this.fb.group({
-      email: [null, [Validators.email, Validators.required]],
+      name: [null, [Validators.required]],
       password: [null, [Validators.required]],
     });
   }
@@ -46,9 +47,9 @@ export class SignInComponent implements OnInit {
 
     if (this.validateForm.valid) {
       this.spinner.show();
-      const {email, password} = this.validateForm.getRawValue();
-      const authenticationDetails = this.authService.authenticationDetails(email, password);
-      const cognitoUser = this.authService.getCognitoUser(email);
+      const {name, password} = this.validateForm.getRawValue();
+      const authenticationDetails = this.authService.authenticationDetails(name, password);
+      const cognitoUser = this.authService.getCognitoUser(name);
       cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess:  (result) => {
           this.authService.jwtToken = result.getIdToken().getJwtToken();

@@ -18,6 +18,7 @@ import * as AWS from 'aws-sdk';
   styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
+  currentUserName: string;
   envJson: string;
   isGenerating = false;
 
@@ -56,53 +57,55 @@ export class MainComponent implements OnInit {
     if (this.env.AssetsDistributionUrl && this.env.ApiUrl) {
       if (!this.authService.user) {
         this.router.navigate(['/signin']);
-      }
-      this.spinner.show();
-      this.appService.readVideoDtos().then(() => {
-        this.appService.videosBehavior.subscribe(videos => {
-          this.videos = videos;
-          this.spinner.hide();
-          videos.forEach((videoTemp, index) => {
-            if (videoTemp.languages && videoTemp.languages.length > 0) {
-              const notGenerateYetSubtitleIndex = videoTemp.languages.findIndex(language => !language.vttURL || !language.srtURL);
-              if (notGenerateYetSubtitleIndex !== -1) {
-                this.videos[index].isGenerating = true;
-                this.isGenerating = true;
-              } else {
-                this.videos[index].isGenerating = false;
-              }
-              const interval = setInterval(async () => {
+      } else {
+        this.spinner.show();
+        this.currentUserName = this.authService.getUserName();
+        this.appService.readVideoDtos().then(() => {
+          this.appService.videosBehavior.subscribe(videos => {
+            this.videos = videos;
+            this.spinner.hide();
+            videos.forEach((videoTemp, index) => {
+              if (videoTemp.languages && videoTemp.languages.length > 0) {
                 const notGenerateYetSubtitleIndex = videoTemp.languages.findIndex(language => !language.vttURL || !language.srtURL);
                 if (notGenerateYetSubtitleIndex !== -1) {
                   this.videos[index].isGenerating = true;
-                  const video = await this.appService.readVideoDto(videoTemp.videoId);
-                  const {languages} = video;
-                  if (languages[notGenerateYetSubtitleIndex].srtURL && languages[notGenerateYetSubtitleIndex].vttURL) {
-                    this.videos[index].languages[notGenerateYetSubtitleIndex] = languages[notGenerateYetSubtitleIndex];
-                    const checkNextIndex = this.videos[index].languages.findIndex(language => !language.vttURL || !language.srtURL);
-                    if (checkNextIndex === -1 && this.videos[index]) {
+                  this.isGenerating = true;
+                } else {
+                  this.videos[index].isGenerating = false;
+                }
+                const interval = setInterval(async () => {
+                  const notGenerateYetSubtitleIndex = videoTemp.languages.findIndex(language => !language.vttURL || !language.srtURL);
+                  if (notGenerateYetSubtitleIndex !== -1) {
+                    this.videos[index].isGenerating = true;
+                    const video = await this.appService.readVideoDto(videoTemp.videoId);
+                    const {languages} = video;
+                    if (languages[notGenerateYetSubtitleIndex].srtURL && languages[notGenerateYetSubtitleIndex].vttURL) {
+                      this.videos[index].languages[notGenerateYetSubtitleIndex] = languages[notGenerateYetSubtitleIndex];
+                      const checkNextIndex = this.videos[index].languages.findIndex(language => !language.vttURL || !language.srtURL);
+                      if (checkNextIndex === -1 && this.videos[index]) {
+                        this.videos[index].isGenerating = false;
+                        this.isGenerating = false;
+                      }
+                      clearInterval(interval);
+                    } else {
+                      this.isGenerating = true;
+                    }
+                  } else {
+                    if (this.videos[index]) {
                       this.videos[index].isGenerating = false;
-                      this.isGenerating = false;
                     }
                     clearInterval(interval);
-                  } else {
-                    this.isGenerating = true;
                   }
-                } else {
-                  if (this.videos[index]) {
-                    this.videos[index].isGenerating = false;
-                  }
-                  clearInterval(interval);
-                }
-              }, 1000);
-            }
+                }, 1000);
+              }
+            });
           });
+        }).catch(err => {
+          this.spinner.hide();
+          this.env.ApiUrl = undefined;
+          this.nzMessageService.error(`Error : ${err.message}`, {nzDuration: 5000});
         });
-      }).catch(err => {
-        this.spinner.hide();
-        this.env.ApiUrl = undefined;
-        this.nzMessageService.error(`Error : ${err.message}`, {nzDuration: 5000});
-      });
+      }
     }
   }
 
@@ -142,6 +145,7 @@ export class MainComponent implements OnInit {
     const {title, description, sourceLanguageCode} = this.validateForm.getRawValue();
     this.appService.createVideo({
       title,
+      userName: this.currentUserName,
       description,
       hasTranscript: false,
       sourceLanguageCode,
@@ -389,6 +393,7 @@ export class MainComponent implements OnInit {
   }
 
   signOut(): void {
+    this.spinner.show();
     this.authService.signOut();
     this.router.navigate(['/signin']);
   }

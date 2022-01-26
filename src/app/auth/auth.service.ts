@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {AuthenticationDetails, CognitoUser, CognitoUserPool} from "amazon-cognito-identity-js";
+import {AuthenticationDetails, CognitoRefreshToken, CognitoUser, CognitoUserPool} from "amazon-cognito-identity-js";
 import {EnvService} from "../env.service";
 import * as AWS from "aws-sdk";
 import {Router} from "@angular/router";
@@ -33,6 +33,10 @@ export class AuthService {
     return this.userPool.getCurrentUser();
   }
 
+  public getUserName(): string {
+    return this.user.getUsername();
+  }
+
   public signOut() {
     this.user.signOut();
   }
@@ -60,7 +64,8 @@ export class AuthService {
               AWS.config.credentials = credentials;
             });
           } else {
-            this.user.refreshSession(session.getRefreshToken(), (err, session) => {
+            const token = new CognitoRefreshToken({RefreshToken: session.getRefreshToken().getToken()});
+            this.user.refreshSession(token, (err, session) => {
               if (err) this.router.navigate(['/signin'])
               else this.setCredentials();
             })
