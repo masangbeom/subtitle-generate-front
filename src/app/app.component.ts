@@ -8,12 +8,4 @@ import {EnvService} from "./env.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly env: EnvService,
-  ) {
-    if (this.env.AssetsDistributionUrl && this.env.ApiUrl) {
-      this.authService.setCredentials();
-    }
-  }
 }

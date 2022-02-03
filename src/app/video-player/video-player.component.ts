@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
 import videojs from 'video.js';
-import 'videojs-mobile-ui';
+
 import {subTitleLanguageList} from "../support-language";
 
 @Component({
@@ -13,7 +13,6 @@ import {subTitleLanguageList} from "../support-language";
 })
 export class VideoPlayerComponent implements OnInit, AfterViewInit {
   @ViewChild('target', {static: true}) target: ElementRef;
-  // see options: https://github.com/videojs/video.js/blob/maintutorial-options.html
   @Input() options: {
     fluid: boolean,
     aspectRatio?: string,
@@ -46,7 +45,6 @@ export class VideoPlayerComponent implements OnInit, AfterViewInit {
     // this.player = videojs(this.target.nativeElement, this.options, function onPlayerReady() {
     // });
     this.player = videojs(this.target.nativeElement, this.options);
-    this.player.mobileUi();
   }
 
   ngAfterViewInit() {

@@ -41,38 +41,44 @@ export class AuthService {
     this.user.signOut();
   }
 
-  setCredentials() {
-    if (!this.user) {
-      this.router.navigate(['/signin'])
-    } else {
-      this.user.getSession((err, session) => {
-        if (err || !session) {
-          this.router.navigate(['/signin'])
-        } else {
-          if (session.isValid()) {
-            this.jwtToken = session.getIdToken().getJwtToken();
-            const credentialLogins = {};
-            credentialLogins[`cognito-idp.${this.env.Region}.amazonaws.com/${this.env.UserPoolId}`] = session
-              .getIdToken()
-              .getJwtToken();
-            AWS.config.region = this.env.Region;
-            const credentials = new AWS.CognitoIdentityCredentials({
-              IdentityPoolId: this.env.IdentityPoolId,
-              Logins: credentialLogins,
-            });
-            credentials.get(() => {
-              AWS.config.credentials = credentials;
-            });
-          } else {
-            const token = new CognitoRefreshToken({RefreshToken: session.getRefreshToken().getToken()});
-            this.user.refreshSession(token, (err, session) => {
-              if (err) this.router.navigate(['/signin'])
-              else this.setCredentials();
-            })
+  async setCredentials(): Promise<void> {
+    return new Promise(resolve => {
+      if (!this.user) {
+        this.router.navigate(['/signin'])
+        resolve();
+      } else {
+        this.user.getSession((err, session) => {
+          if (err || !session) {
             this.router.navigate(['/signin'])
+            resolve();
+          } else {
+            if (session.isValid()) {
+              this.jwtToken = session.getIdToken().getJwtToken();
+              const credentialLogins = {};
+              credentialLogins[`cognito-idp.${this.env.Region}.amazonaws.com/${this.env.UserPoolId}`] = session
+                .getIdToken()
+                .getJwtToken();
+              AWS.config.region = this.env.Region;
+              const credentials = new AWS.CognitoIdentityCredentials({
+                IdentityPoolId: this.env.IdentityPoolId,
+                Logins: credentialLogins,
+              });
+              credentials.get(() => {
+                AWS.config.credentials = credentials;
+                resolve();
+              });
+            } else {
+              const token = new CognitoRefreshToken({RefreshToken: session.getRefreshToken().getToken()});
+              this.user.refreshSession(token, (err, session) => {
+                if (err) this.router.navigate(['/signin'])
+                else this.setCredentials();
+              })
+              this.router.navigate(['/signin'])
+              resolve();
+            }
           }
-        }
-      })
-    }
+        })
+      }
+    })
   }
 }

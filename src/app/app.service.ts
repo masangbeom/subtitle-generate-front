@@ -32,12 +32,13 @@ export class AppService {
     });
   }
 
-  async readVideoDtos(): Promise<ReadVideoDto[]> {
+  async readVideoDtos(userName: string): Promise<ReadVideoDto[]> {
     return new Promise((resolve, reject) => {
       this.httpClient.get<ReadVideoDto[]>(`${this.envService.ApiUrl}videos`)
         .subscribe((videos: ReadVideoDto[]) => {
           this.videosBehavior.next(videos
             .sort((x, y) => +new Date(y.createdAt) - +new Date(x.createdAt))
+            .filter(video => video.userName === userName)
             .filter(video => !!video.sourceFileURL));
           resolve(videos);
         }, error => {

@@ -34,12 +34,10 @@
             "styles": [
               "src/theme.less",
               "src/styles.scss",
-              "node_modules/video.js/dist/video-js.min.css",
-              "node_modules/videojs-mobile-ui/dist/videojs-mobile-ui.css"
+              "node_modules/video.js/dist/video-js.min.css"
             ],
             "scripts": [
-              "node_modules/video.js/dist/video-js.min.css",
-              "node_modules/videojs-mobile-ui/dist/videojs-mobile-ui.js"
+              "node_modules/video.js/dist/video-js.min.css"
             ],
             "allowedCommonJsDependencies": ["crypto-js", "aws-sdk", "@aws-sdk/eventstream-marshaller", "buffer", "js-cookie",
               "@aws-crypto", "zen-observable", "@aws-sdk/util-utf8-node", "@aws-crypto/sha256-js", "@aws-sdk/util-buffer-from",

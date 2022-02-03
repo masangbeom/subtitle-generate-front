@@ -58,12 +58,7 @@
         </nz-row>
       </ng-template>
       <ng-template #descriptionTemp>
-        <nz-row>
-          {{video.description}}
-        </nz-row>
-        <nz-row nzJustify="end">
-          <nz-tag class="user-name-tag"><span>{{video.userName}}</span></nz-tag>
-        </nz-row>
+        {{video.description}}
       </ng-template>
       <ng-template #createSubtitle>
         <button nz-button nzType="primary" [nzSize]="'large'" [disabled]="video.isGenerating"
