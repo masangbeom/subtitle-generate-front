@@ -22,9 +22,8 @@ export class HttpInterceptorService implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const request: HttpRequest<any> = req.clone();
     return next.handle(request).pipe(catchError(e => {
-      if (e.status === 401 || e.status === 0) {
-        this.authService.signOut();
-        this.router.navigate(['/signin']);
+      if (e.status === 401 || e.status === 0 || e.status === 404) {
+        this.router.navigate(['/']);
       }
       if (e.error && e.error.message) {
         this.nzMessageService.error(e.error.message, {nzDuration: 5000});

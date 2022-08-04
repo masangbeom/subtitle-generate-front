@@ -1,7 +1,6 @@
 <ng-container *ngIf="env.ApiUrl">
   <div class="banner" nz-row nzJustify="center">
     <nz-row nzJustify="space-between">
-      <button nz-button nzSize="large" nzDanger (click)="reSetEnv()">Environment Setting</button>
       <button nz-button nzSize="large" nzDanger (click)="signOut()">Sign Out</button>
     </nz-row>
     <h1 class="banner-title">Subtitle Generator</h1>
@@ -27,7 +26,7 @@
       <nz-card [nzActions]="[createSubtitle, playVideo, deleteConfirm]" [nzBorderless]="true" nzHoverable>
         <nz-card-meta [nzTitle]="titleTemp" [nzDescription]="descriptionTemp"></nz-card-meta>
         <div class="subtitle-list-wrapper">
-          <nz-list nzBordered nzHeader="Subtitles">
+          <nz-list nzBordered [nzHeader]="subtitleHeader">
             <nz-list-item *ngFor="let item of video.languages">
               <ul nz-list-item-actions *ngIf="item.srtURL && item.vttURL">
                 <nz-list-item-action>
@@ -45,6 +44,14 @@
               {{languageToText(item.language)}}
             </nz-list-item>
           </nz-list>
+          <ng-template #subtitleHeader>
+            <nz-row nzAlign="middle" nzJustify="space-between">
+                Subtitle
+                <button *ngIf="video.languages && video.languages.length > 0 && video.languages[0].vttURL" nz-button nzType="primary" [routerLink]="'subtitle-editor/' + video.videoId">
+                  Edit
+                </button>
+            </nz-row>
+          </ng-template>
         </div>
       </nz-card>
       <ng-template #titleTemp>

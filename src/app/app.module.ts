@@ -39,8 +39,17 @@ import {NzSelectModule} from "ng-zorro-antd/select";
 import { VideoPlayerComponent } from './video-player/video-player.component';
 import {JwtInterceptor} from "./auth/jwt-interceptor.service";
 import {HttpInterceptorService} from "./http.interceptor";
+import {SubtitleEditorComponent} from "./subtitle-editor/subtitle-editor.component";
+import {NzLayoutModule} from "ng-zorro-antd/layout";
+import {NzTypographyModule} from "ng-zorro-antd/typography";
+import {NzDescriptionsModule} from "ng-zorro-antd/descriptions";
+import {NzAffixModule} from "ng-zorro-antd/affix";
+import {
+  EnterOutline
+} from '@ant-design/icons-angular/icons';
 
 registerLocaleData(en);
+
 const routes: Routes = [
   {
     path: '',
@@ -49,6 +58,10 @@ const routes: Routes = [
       {
         path: '',
         component: MainComponent,
+      },
+      {
+        path: 'subtitle-editor/:videoId',
+        component: SubtitleEditorComponent,
       },
       {
         path: 'signin',
@@ -81,6 +94,7 @@ const routes: Routes = [
     SignUpComponent,
     VerificationCodeComponent,
     VideoPlayerComponent,
+    SubtitleEditorComponent,
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -97,7 +111,7 @@ const routes: Routes = [
     NzCardModule,
     NzInputModule,
     NzSelectModule,
-    NzIconModule,
+    NzIconModule.forChild([EnterOutline]),
     NzDividerModule,
     NzModalModule,
     NzButtonModule,
@@ -111,6 +125,10 @@ const routes: Routes = [
     NzPopconfirmModule,
     NzListModule,
     NzNotificationModule,
+    NzLayoutModule,
+    NzTypographyModule,
+    NzDescriptionsModule,
+    NzAffixModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

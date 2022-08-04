@@ -4,4 +4,5 @@ export class CreateSubtitleDto {
   targetLanguage: string;
   hasTranscript: boolean;
   sourceTranscriptURL: string;
+  editKey?: string;
 }

@@ -219,6 +219,9 @@ export class MainComponent implements OnInit {
           const index = video.languages.findIndex(tempLanguage => tempLanguage.language === language.language);
           return index === -1;
         });
+    } else {
+      this.subTitleLanguageList = subTitleLanguageList
+        .filter(language => language.code !== video.sourceLanguageCode);
     }
   }
 

@@ -29,7 +29,17 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/env.js"
+              "src/env.js",
+              {
+                "glob": "enter.js",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/outline/",
+                "output": "/assets/outline/"
+              },
+              {
+                "glob": "enter.svg",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/outline/",
+                "output": "/assets/outline/"
+              }
             ],
             "styles": [
               "src/theme.less",
@@ -54,7 +64,7 @@
               "@aws-sdk/eventstream-serde-browser", "@aws-sdk/middleware-location-constraint", "uuid",
               "@aws-sdk/credential-provider-cognito-identity", "@aws-sdk/eventstream-serde-config-resolver",
               "ulid", "zen-push", "lodash", "@aws-amplify/core", "url", "@aws-crypto/crc32", "isomorphic-unfetch",
-              "crypto-js/lib-typedarrays", "crypto-js/hmac-sha256", "crypto", "camelcase-keys"
+              "crypto-js/lib-typedarrays", "crypto-js/hmac-sha256", "crypto", "camelcase-keys", "angular-slickgrid","stream"
             ]
           },
           "configurations": {
