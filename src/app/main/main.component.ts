@@ -380,10 +380,10 @@ export class MainComponent implements OnInit {
 
         this.spinner.show();
         this.appService.setEnv(body).then(() => {
-          this.nzMessageService.success(`Success setting environment!`, {nzDuration: 5000});
           setTimeout(() => {
+            this.nzMessageService.success(`Success setting environment!`, {nzDuration: 5000});
             window.location.reload();
-          }, 500)
+          }, 22000)
         }).catch((err) => {
           this.nzMessageService.error(`Error : ${err.message}`, {nzDuration: 5000});
         });
